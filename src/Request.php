@@ -9,8 +9,8 @@ class Request
 {
     public static $google_token;
     public static $telegram_token;
-    private static $base_google_uri     = 'https://www.googleapis.com/youtube/v3/videos?key=';
-    private static $base_telegram_uri   = 'https://api.telegram.org/bot';
+    private static $base_google_uri = 'https://www.googleapis.com/youtube/v3/videos?key=';
+    private static $base_telegram_uri = 'https://api.telegram.org/bot';
 
     public static function getResponseTelegram(string $method, int $telegram_offset)
     {
