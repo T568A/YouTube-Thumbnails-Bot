@@ -9,31 +9,33 @@ class Request
 {
     public static $google_token;
     public static $telegram_token;
-    private static $clientTelegram;
     private static $base_google_uri = 'https://www.googleapis.com/youtube/v3/videos?key=';
     private static $base_telegram_uri = 'https://api.telegram.org/bot';
 
-    public static function getResponseTelegram(string $method, int $telegram_offset)
+
+    public static function guzzleClient()
     {
-        self::$clientTelegram = new Client([
-                'base_uri' => self::$base_telegram_uri . self::$telegram_token . '/',
-                'timeout' => 2.0,
-            ]
-        );
-        return json_decode((string)self::$clientTelegram->request('GET', $method . '?offset=' . $telegram_offset)->getBody());
+        return new Client(['timeout' => 3.0]);
+    }
+
+    public static function getResponseTelegram(int $telegram_offset)
+    {
+        $uri = self::$base_telegram_uri . self::$telegram_token . '/getUpdates?offset=' . $telegram_offset;
+
+        return json_decode((string)self::guzzleClient()->request('GET', $uri)->getBody());
     }
 
     public static function getResponseGoogle(string $id)
     {
-        return json_decode((string)(new Client([
-                'base_uri' => self::$base_google_uri . self::$google_token . '&part=snippet&id=' . $id,
-                'timeout' => 2.0,
-            ]
-        ))->request('GET')->getBody());
+        $uri = self::$base_google_uri . self::$google_token . '&part=snippet&id=' . $id;
+
+        return json_decode((string)self::guzzleClient()->request('GET', $uri)->getBody());
     }
 
     public static function sendMessageTelegramChat(int $chat_id, string $text)
     {
-        return json_decode((string)self::$clientTelegram->request('GET', 'sendMessage?chat_id=' . $chat_id . '&text=' . $text)->getBody());
+        $uri = self::$base_telegram_uri . self::$telegram_token . '/' . 'sendMessage?chat_id=' . $chat_id . '&text=' . $text;
+
+        return json_decode((string)self::guzzleClient()->request('GET', $uri)->getBody());
     }
 }

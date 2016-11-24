@@ -16,7 +16,7 @@ Request::$telegram_token = $tokens['Telegram'];
 
 try {
     while (true) {
-        $get_telegram_updates = Request::getResponseTelegram('getUpdates', $telegram_offset);
+        $get_telegram_updates = Request::getResponseTelegram($telegram_offset);
         if ($get_telegram_updates->ok === true && !empty($get_telegram_updates->result)) {
             $telegram_offset = end($get_telegram_updates->result)->update_id + 1;
             Message::sendMessage($get_telegram_updates->result);
