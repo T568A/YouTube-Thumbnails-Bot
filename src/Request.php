@@ -7,25 +7,37 @@ use GuzzleHttp\Client;
 
 class Request
 {
-    private static $base_telegram_uri   = 'https://api.telegram.org/bot';
+    public static $google_token;
+    public static $telegram_token;
     private static $base_google_uri     = 'https://www.googleapis.com/youtube/v3/videos?key=';
+    private static $base_telegram_uri   = 'https://api.telegram.org/bot';
 
-    // TODO: add Async Requests
-    public static function getTelegram(string $telegram_token, string $method)
+    public static function getResponseTelegram(string $method, int $telegram_offset)
     {
         return json_decode((string)(new Client([
-                'base_uri' => self::$base_telegram_uri . $telegram_token . '/',
+                'base_uri' => self::$base_telegram_uri . self::$telegram_token . '/',
                 'timeout' => 2.0,
             ]
-        ))->request('GET', $method)->getBody());
+        ))->request('GET', $method . '?offset=' . $telegram_offset)->getBody());
     }
 
-    public static function getGoogle(string $google_token, string $id)
+    public static function getResponseGoogle(string $id)
     {
         return json_decode((string)(new Client([
-                'base_uri' => self::$base_google_uri . $google_token . '&part=snippet&id=' . $id,
+                'base_uri' => self::$base_google_uri . self::$google_token . '&part=snippet&id=' . $id,
                 'timeout' => 2.0,
             ]
         ))->request('GET')->getBody());
     }
+
+    public static function sendMessageTelegramChat(int $chat_id, string $text)
+    {
+        return json_decode((string)(new Client([
+                'base_uri' => self::$base_telegram_uri . self::$telegram_token . '/',
+                'timeout' => 2.0,
+            ]
+        ))->request('GET', 'sendMessage?chat_id=' . $chat_id . '&text=' . $text)->getBody());
+    }
+
+
 }
