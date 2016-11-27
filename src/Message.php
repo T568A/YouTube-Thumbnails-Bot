@@ -17,10 +17,8 @@ class Message
                 $maxres = reset($get_video_info->items)->snippet->thumbnails->maxres->url;
                 $standard = reset($get_video_info->items)->snippet->thumbnails->standard->url;
                 if (!empty($maxres)) {
-                    echo $maxres . PHP_EOL;
                     Request::sendMessageTelegramChat($chat_id, $maxres);
                 } else if (!empty($standard)) {
-                    echo $standard . PHP_EOL;
                     Request::sendMessageTelegramChat($chat_id, $standard);
                 } else {
                     Request::sendMessageTelegramChat($chat_id, 'Sorry :(');
