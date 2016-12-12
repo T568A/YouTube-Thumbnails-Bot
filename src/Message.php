@@ -3,8 +3,6 @@ declare(strict_types = 1);
 
 namespace Telegram\Bot;
 
-use GuzzleHttp\Client;
-
 class Message
 {
     public static function sendMessage($telegram_updates)
